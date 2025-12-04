@@ -227,6 +227,20 @@ select {
   appearance: none;
 }
 
+/* ========== HONEYPOT FIELD (ANTI-BOT) ========== */
+/* Off-screen but available in the DOM for bots; humans won't see or fill this. */
+.hp-field {
+  position: absolute !important;
+  left: -9999px !important;
+  top: auto !important;
+  width: 1px !important;
+  height: 1px !important;
+  overflow: hidden !important;
+  border: 0 !important;
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
 input[type="text"]:focus,
 input[type="email"]:focus,
 select:focus {

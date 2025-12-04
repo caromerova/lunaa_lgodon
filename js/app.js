@@ -2,6 +2,9 @@
 const SCRIPT_URL =
   "https://script.google.com/macros/s/AKfycbwlw62Y_x3ao9KV5LCK03BOBdVXsDiVU9Y6UQFvybwhmNu3ukIc5J9e4J-eaXxPTbAa/exec";
 
+// **IMPORTANTE:** Reemplaza esto con tu Site Key de reCAPTCHA v3
+const RECAPTCHA_SITE_KEY = "6LemKCEsAAAAAL20-rHZs_MHX75MlSYwQKPJS32k";
+
 document.addEventListener("DOMContentLoaded", () => {
   const form = document.getElementById("leadForm");
   const responseMessage = document.getElementById("responseMessage");
@@ -10,6 +13,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const emailInput = document.getElementById("email");
   const eventSelect = document.getElementById("event");
   const dateSelect = document.getElementById("date");
+  const hpInput = document.getElementById("hp_website"); // honeypot
 
   // Validar email
   function isValidEmail(email) {
@@ -23,6 +27,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const email = emailInput.value.trim();
     const event = eventSelect.value;
     const date = dateSelect.value;
+    const hp = hpInput ? hpInput.value.trim() : "";
 
     // Limpiar mensaje anterior
     responseMessage.textContent = "";
@@ -32,6 +37,17 @@ document.addEventListener("DOMContentLoaded", () => {
     // Validaciones
     if (!name || name.length < 2) {
       showError("Por favor, ingresa un nombre válido (mínimo 2 caracteres).");
+      return false;
+    }
+
+    // Honeypot check: si este campo tiene contenido, probablemente es un bot.
+    if (hp) {
+      console.warn(
+        "Honeypot triggered - posible envío automatizado. Valor:",
+        hp
+      );
+      // No dar información detallada al usuario; mostrar un mensaje genérico.
+      showError("No se pudo procesar el envío. Por favor intenta de nuevo.");
       return false;
     }
 
@@ -99,6 +115,27 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
+  // Función para obtener token de reCAPTCHA v3
+  async function getRecaptchaToken() {
+    try {
+      if (
+        typeof grecaptcha !== "undefined" &&
+        RECAPTCHA_SITE_KEY !== "YOUR_SITE_KEY"
+      ) {
+        const token = await grecaptcha.execute(RECAPTCHA_SITE_KEY, {
+          action: "submit",
+        });
+        return token;
+      } else {
+        console.warn("reCAPTCHA no está configurado correctamente");
+        return null;
+      }
+    } catch (err) {
+      console.error("Error obteniendo token reCAPTCHA:", err);
+      return null;
+    }
+  }
+
   form.addEventListener("submit", async (e) => {
     e.preventDefault();
 
@@ -113,8 +150,18 @@ document.addEventListener("DOMContentLoaded", () => {
     submitBtn.textContent = "Enviando...";
     responseMessage.style.display = "none";
 
+    // Obtener token de reCAPTCHA v3
+    const recaptchaToken = await getRecaptchaToken();
+    if (!recaptchaToken) {
+      console.warn(
+        "No se pudo obtener token de reCAPTCHA, continuando sin validación..."
+      );
+    }
+
     // 1. Recopilar datos del formulario
     const formData = new FormData(form);
+    // Añadir el token de reCAPTCHA a los datos
+    formData.set("recaptchaToken", recaptchaToken || "");
     // Convertir FormData a un objeto URLSearchParams (necesario para el POST de Apps Script)
     const params = new URLSearchParams(formData);
 

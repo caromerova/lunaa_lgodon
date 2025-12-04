@@ -8,6 +8,8 @@
         content="Descarga nuestra Guía Gratuita de Tendencias en Vestidos de Bautizo y Comunión. Recibe un cupón del 10% OFF.">
     <title>Guía de Moda para Bautizo y Comunión | Lunaa Logdón</title>
     <link rel="stylesheet" href="css/style.css">
+    <!-- reCAPTCHA v3 (reemplaza YOUR_SITE_KEY con tu Site Key) -->
+    <script src="https://www.google.com/recaptcha/api.js?render=6LemKCEsAAAAAL20-rHZs_MHX75MlSYwQKPJS32k"></script>
 </head>
 
 <body>
@@ -32,6 +34,16 @@
             </div>
             <fieldset>
                 <legend class="sr-only">Formulario de Registro para Guía Gratuita</legend>
+
+                <!-- Campo oculto para el token de reCAPTCHA v3 -->
+                <input type="hidden" id="recaptchaToken" name="recaptchaToken" value="">
+
+                <!-- Honeypot: campo oculto para detectar bots (no tocar).
+                     Nombre deliberadamente inocuo como "website" para atraer bots.
+                     Está oculto mediante CSS (.hp-field) y no debe ser llenado por usuarios.
+                 -->
+                <input type="text" id="hp_website" name="website" class="hp-field" autocomplete="off" tabindex="-1"
+                    aria-hidden="true" value="">
 
                 <div class="form-group">
                     <label for="name">Nombre:</label>
