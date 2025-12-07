@@ -1,6 +1,6 @@
 // **IMPORTANTE:** Reemplaza esta URL con la URL de tu Despliegue de Apps Script
 const SCRIPT_URL =
-  "https://script.google.com/macros/s/AKfycbwlw62Y_x3ao9KV5LCK03BOBdVXsDiVU9Y6UQFvybwhmNu3ukIc5J9e4J-eaXxPTbAa/exec";
+  "https://script.google.com/macros/s/AKfycbyvwCBuOb2Kz2k3FWh8Tk6-cPZooAiPOJjReFwml3mVpYQBbIp2W6skqgeXV3h8TBXU/exec";
 
 // **IMPORTANTE:** Reemplaza esto con tu Site Key de reCAPTCHA v3
 const RECAPTCHA_SITE_KEY = "6LemKCEsAAAAAL20-rHZs_MHX75MlSYwQKPJS32k";
